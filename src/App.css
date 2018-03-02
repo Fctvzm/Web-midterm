@@ -34,13 +34,17 @@
   border: 1px solid black;
 }
 
+.table {
+  margin-bottom: 10px;
+}
 .product {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   border: 1px solid black;
 }
 
 .product-container {
+  width: 180px;
   margin-bottom: 20px;
 }
 

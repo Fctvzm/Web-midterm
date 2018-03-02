@@ -28,48 +28,59 @@ var productsArray = [
   }
 ];
 
+class Product extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			active: false
+		}
+		this.handleOnProductClick = this.handleOnProductClick.bind(this);
+	}
+
+	handleOnProductClick(cost){
+		this.setState({
+			active: !this.state.active
+		});
+		if (!this.state.active === false) {
+			cost = -1*cost;
+		} 
+		this.props.onProductClick(cost);
+	}
+	render() {
+		var id = this.props.id;
+		var product = productsArray[id];
+		return(
+			<div key = {id} 
+	    		onClick = {(e) => this.handleOnProductClick(product.cost, e)}
+				style = {{backgroundColor: this.state.active ? 'blue' : ''}}
+	    		className="product">
+	      		<p>{product.name}</p>
+	      		<p>{product.cost}тг</p>
+	    	</div>
+		);
+	}
+}
+
+
 class Products extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			total: 0,
-			active: []
 		}
 		this.handleOnProductClick = this.handleOnProductClick.bind(this);
 	}
 
-	handleOnProductClick(product) {
-		var arr = this.state.active;
-		var length = arr.length;
-		arr = arr.filter(function (product) {
-			return (product.id !== arr.id);
-		});
-		if (arr.length === length) {
-			arr.push({
-			id: product.id,
-			name: product.name,
-			cost: product.cost
-			});
-		} 
-		console.log(arr);
-		var amount = 0;
-		for(var i = 0; i < arr.length; i++) {
-    		amount += arr[i].cost;
-    	}
-    	console.log(amount);
+	handleOnProductClick(cost) {
+		var amount = this.state.total;
+		amount += cost;
 		this.setState({
-			active: arr,
 			total: amount
-		})
+		});
 	}
 
 	createProducts = (product) => (
-	    <div key = {product.id} 
-	    	onClick = {(e) => this.handleOnProductClick(product, e)}
-	    	className="product">
-	      <p>{product.name}</p>
-	      <p>{product.cost}тг</p>
-	    </div>
+	    <Product key = {product.id} id = {product.id} onProductClick = {this.handleOnProductClick}/>
 	)
 
 	render() {
@@ -80,6 +91,7 @@ class Products extends Component {
 	          <div className="table">
 	            {products}
 	          </div>
+	          <div>total: {this.state.total}тг</div>
 	        </div>
 		);
 	}
